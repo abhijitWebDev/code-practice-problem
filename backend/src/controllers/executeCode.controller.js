@@ -90,51 +90,52 @@ const executeCode = async (req, res) => {
   
       console.log('Result-------------')
       console.log(results);
+
+      
   
-      // store submission details in the database
-      const submission = await db.submission.create({
-        data: {
-          userId,
-          problemId,
-          sourceCode: source_code,
-          language: language_id.toString(),
-          status: results.every(result => result.status.id === 3) ? "Accepted" : "Wrong answer",
-          testCases: {
-            create: results.map((result, index) => ({
-              testCase: index + 1,
-              passed: result.status.id === 3,
-              stdout: result.stdout,
-              expected: expected_outputs[index],
-              stderr: result.stderr,
-              compileOutput: result.complile_output,
-              status: result.status.description,
-              memory: result.memory !== null ? result.memory.toString() : null,
-              time: result.time
-            }))
-          }
-        }
-      });
+      // // store submission details in the database
+      // const submission = await db.submission.create({
+      //   data: {
+      //     userId,
+      //     problemId,
+      //     sourceCode: source_code,
+      //     language: language_id.toString(),
+      //     status: results.every(result => result.status.id === 3) ? "Accepted" : "Wrong answer",
+      //     testCases: {
+      //       create: results.map((result, index) => ({
+      //         testCase: index + 1,
+      //         passed: result.status.id === 3,
+      //         stdout: result.stdout,
+      //         expected: expected_outputs[index],
+      //         stderr: result.stderr,
+      //         compileOutput: result.complile_output,
+      //         status: result.status.description,
+      //         memory: result.memory !== null ? result.memory.toString() : null,
+      //         time: result.time
+      //       }))
+      //     }
+      //   }
+      // });
 
-      // update problem solved status of all test cases passed
-      if(submission.status === "Accepted") {
-        await db.problemSolved.upsert({
-          where: {
-            userId_problemId: {
-              userId,
-              problemId
-            }
-          },
-          update: {},
-          create: {
-            userId,
-            problemId
-          }
-        });
+      // // update problem solved status of all test cases passed
+      // if(submission.status === "Accepted") {
+      //   await db.problemSolved.upsert({
+      //     where: {
+      //       userId_problemId: {
+      //         userId,
+      //         problemId
+      //       }
+      //     },
+      //     update: {},
+      //     create: {
+      //       userId,
+      //       problemId
+      //     }
+      //   });
 
-      }
+      // }
       res.status(200).json({
         message: "Code Executed!",
-        submission
       });
     } catch (error) {
       console.error(error);

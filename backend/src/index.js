@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
 import executionRoute from "./routes/executeCode.routes.js";
 import playlistRoutes from "./routes/playlist.routes.js";
+import cors from 'cors'
 
 
 dotenv.config();
@@ -15,6 +16,12 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(
+    cors({
+        origin:["http://localhost:5173"],
+        credentials:true
+    })
+)
 
 // routes
 app.use("/api/v1/auth", authRoutes);

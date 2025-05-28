@@ -264,7 +264,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://myuser:mypassword@localhost:5431/postgres"
+        "value": "postgres://avnadmin:AVNS_Vwh8Xpk5Uujwo69w24V@abhijit-connection-abhijitmone2-9259.g.aivencloud.com:21252/defaultdb?sslmode=require"
       }
     }
   },

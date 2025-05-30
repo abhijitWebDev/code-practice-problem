@@ -75,24 +75,32 @@ const createProblem = async (req, res) => {
 
 const getAllProblems = async (req, res) => {
   try {
-    const problems = await db.problem.findMany();
+    const problems = await db.problem.findMany({
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id
+          }
+        }
+      }
+    });
 
-  // check if problem is not present
-  if(!problems) {
-    return res.status(404).json({error: "No problem found"})
-  }
-  res.status(200).json({
-    success:true,
-    message:"Message Fetched successfully",
-    problems
-  })
+    // check if problems array is empty
+    if (!problems || problems.length === 0) {
+      return res.status(404).json({ error: "No problems found" })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Problems fetched successfully",
+      problems
+    })
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching problems:", error);
     return res.status(500).json({
-      error: "Error while fetching problems",
+      error: "Error while fetching problems"
     })
   }
-  
 };
 
 const getProblemById = async (req, res) => {
